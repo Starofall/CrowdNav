@@ -1,5 +1,8 @@
 # CrowdNav
 
+![Banner](https://raw.githubusercontent.com/Starofall/CrowdNav/master/banner.png)
+
+
 ### Description
 CrowdNav is a simulation based on SUMO and TraCI that implements a custom router
 that can be configured using kafka messages or local JSON config on the fly while the simulation is running.
