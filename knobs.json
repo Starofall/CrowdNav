@@ -1,0 +1,14 @@
+{
+  "victimsPercentageDescription": "the percentage of routes we want to victimize",
+  "victimsPercentage": 0.0,
+  "routeRandomSigmaDescription": "the randomization sigma of edge weigths",
+  "routeRandomSigma": 0.0,
+  "maxSpeedAndLengthFactorDescription": "how much the length/speed influences the routing",
+  "maxSpeedAndLengthFactor": 1,
+  "averageEdgeDurationFactorDescription": "how much the averageEdgeFactor influences the routing",
+  "averageEdgeDurationFactor": 1,
+  "freshnessUpdateFactorDescription":"how much the freshnessUpdateFactor influences the routing",
+  "freshnessUpdateFactor": 10,
+  "freshnessCutOffValueDescription":"if data is older than this we do not consider it in the algorithm",
+  "freshnessCutOffValue": 500
+}
