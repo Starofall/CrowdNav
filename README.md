@@ -1,6 +1,6 @@
 # CrowdNav
 
-![Banner](https://raw.githubusercontent.com/Starofall/CrowdNav/master/banner.png)
+![Banner](https://raw.githubusercontent.com/Starofall/CrowdNav/master/banner.PNG)
 
 
 ### Description
