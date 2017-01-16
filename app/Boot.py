@@ -18,12 +18,11 @@ import time
 
 
 # uuid4()
-def start(processID, parallelMode):
+def start(processID, parallelMode,useGUI):
     """ main entry point into the application """
     Config.processID = processID
     Config.parallelMode = parallelMode
-    if parallelMode:
-        Config.sumoUseGUI = False
+    Config.sumoUseGUI = useGUI
 
     info('#####################################', Fore.CYAN)
     info('#      Starting CrowdNav v0.1       #', Fore.CYAN)
