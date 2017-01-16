@@ -1,6 +1,6 @@
 {
-  "victimsPercentageDescription": "the percentage of routes we want to victimize",
-  "victimsPercentage": 0.0,
+  "explorationPercentageDescription": "the percentage of routes we want to use for exploration",
+  "explorationPercentage": 0.0,
   "routeRandomSigmaDescription": "the randomization sigma of edge weigths",
   "routeRandomSigma": 0.0,
   "maxSpeedAndLengthFactorDescription": "how much the length/speed influences the routing",

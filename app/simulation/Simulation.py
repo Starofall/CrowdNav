@@ -23,7 +23,7 @@ class Simulation(object):
         """ reads configs from a json and applies it at realtime to the simulation """
         try:
             config = json.load(open('./knobs.json'))
-            CustomRouter.victimsPercentage = config['victimsPercentage']
+            CustomRouter.explorationPercentage = config['explorationPercentage']
             CustomRouter.averageEdgeDurationFactor = config['averageEdgeDurationFactor']
             CustomRouter.maxSpeedAndLengthFactor = config['maxSpeedAndLengthFactor']
             CustomRouter.freshnessUpdateFactor = config['freshnessUpdateFactor']
@@ -76,9 +76,9 @@ class Simulation(object):
                     # kafka mode
                     newConf = KafkaConnector.checkForNewConfiguration()
                     if newConf is not None:
-                        if "victim_percentage" in newConf:
-                            CustomRouter.victimsPercentage = newConf["victim_percentage"]
-                            print("setting victimsPercentage: " + str(newConf["victim_percentage"]))
+                        if "exploration_percentage" in newConf:
+                            CustomRouter.explorationPercentage = newConf["exploration_percentage"]
+                            print("setting victimsPercentage: " + str(newConf["exploration_percentage"]))
                         if "route_random_sigma" in newConf:
                             CustomRouter.routeRandomSigma = newConf["route_random_sigma"]
                             print("setting routeRandomSigma: " + str(newConf["route_random_sigma"]))

@@ -14,8 +14,8 @@ class CustomRouter(object):
     edgeMap = None
     graph = None
 
-    # the percentage of smart cars that should be victimized
-    victimsPercentage = 0.0
+    # the percentage of smart cars that should be used for exploration
+    explorationPercentage = 0.0
     # randomizes the routes
     routeRandomSigma = 0.3
     # how much speed influences the routing
@@ -37,7 +37,6 @@ class CustomRouter(object):
             self.graph.add_edge(edge.fromNodeID, edge.toNodeID,
                                 {'length': edge.length, 'maxSpeed': edge.maxSpeed,
                                  'lanes': len(edge.lanes), 'edgeID': edge.id})
-
 
     @classmethod
     def minimalRoute(cls, fr, to, tick, car):
@@ -68,7 +67,7 @@ class CustomRouter(object):
         # else:
         # 3) Advanced cost function that combines duration with averaging
         # isVictim = ??? random x percent (how many % routes have been victomized before)
-        isVictim = cls.victimsPercentage > random()
+        isVictim = cls.explorationPercentage > random()
         if isVictim:
             victimizationChoice = 1
         else:
@@ -87,7 +86,7 @@ class CustomRouter(object):
             cls.freshnessUpdateFactor * \
             victimizationChoice
 
-    # generate route
+        # generate route
         route = find_path(cls.graph, fr, to, cost_func=cost_func)
         # wrap the route in a result object
         return RouterResult(route, isVictim)

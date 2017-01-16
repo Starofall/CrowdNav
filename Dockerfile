@@ -20,4 +20,4 @@ RUN python /app/setup.py install
 # Add sources
 ADD ./ /app/
 WORKDIR /app
-ENTRYPOINT ["python","/app/forever.py"]
+CMD ["python","/app/forever.py"]
