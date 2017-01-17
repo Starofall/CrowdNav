@@ -101,7 +101,7 @@ class Simulation(object):
                     traci.vehicle.getIDCount()) + "/" + str(
                     CarRegistry.totalCarCounter) + " # avgTripDuration: " + str(
                     CarRegistry.totalTripAverage) + "(" + str(
-                    CarRegistry.totalTrips) + ")" + " # avgTripEfficiency: " + str(
+                    CarRegistry.totalTrips) + ")" + " # avgTripOverhead: " + str(
                     CarRegistry.totalTripOverheadAverage))
 
             # if we are in paralllel mode we end the simulation after 10000 ticks with a result output
@@ -111,6 +111,6 @@ class Simulation(object):
                     traci.vehicle.getIDCount()) + "/" + str(
                     CarRegistry.totalCarCounter) + " # avgTripDuration: " + str(
                     CarRegistry.totalTripAverage) + "(" + str(
-                    CarRegistry.totalTrips) + ")" + " # avgTripEfficiency: " + str(
+                    CarRegistry.totalTrips) + ")" + " # avgTripOverhead: " + str(
                     CarRegistry.totalTripOverheadAverage))
                 return
