@@ -1,15 +1,18 @@
 import json
 import traci
 import traci.constants as tc
+from app.streaming import KafkaForword
 from colorama import Fore
 
 from app import Config
 from app.entitiy.CarRegistry import CarRegistry
 from app.logging import info
-from app.network.Network import Network
-
 from app.routing.CustomRouter import CustomRouter
 from app.streaming import KafkaConnector
+import time
+
+# get the current system time
+current_milli_time = lambda: int(round(time.time() * 1000))
 
 
 class Simulation(object):
@@ -17,6 +20,9 @@ class Simulation(object):
 
     # the current tick of the simulation
     tick = 0
+
+    # last tick time
+    lastTick = current_milli_time()
 
     @classmethod
     def applyFileConfig(cls):
@@ -28,6 +34,7 @@ class Simulation(object):
             CustomRouter.maxSpeedAndLengthFactor = config['maxSpeedAndLengthFactor']
             CustomRouter.freshnessUpdateFactor = config['freshnessUpdateFactor']
             CustomRouter.freshnessCutOffValue = config['freshnessCutOffValue']
+            CustomRouter.reRouteEveryTicks = config['reRouteEveryTicks']
         except:
             pass
 
@@ -52,12 +59,24 @@ class Simulation(object):
             cls.tick += 1
             traci.simulationStep()
 
+            # Log tick duration to kafka
+            duration = current_milli_time() - cls.lastTick
+            cls.lastTick = current_milli_time()
+            msg = dict()
+            msg["duration"] = duration
+            KafkaForword.publish(msg, Config.kafkaTopicPerformance)
+
             # Check for removed cars and re-add them into the system
             for removedCarId in traci.simulation.getSubscriptionResults()[122]:
                 CarRegistry.findById(removedCarId).setArrived(cls.tick)
 
+            timeBeforeCarProcess = current_milli_time()
             # let the cars process this step
             CarRegistry.processTick(cls.tick)
+            # log time it takes for routing
+            msg = dict()
+            msg["duration"] = current_milli_time() - timeBeforeCarProcess
+            KafkaForword.publish(msg, Config.kafkaTopicRouting)
 
             # if we enable this we get debug information in the sumo-gui using global traveltime
             # should not be used for normal running, just for debugging
@@ -94,6 +113,9 @@ class Simulation(object):
                         if "freshness_cut_off_value" in newConf:
                             CustomRouter.freshnessCutOffValue = newConf["freshness_cut_off_value"]
                             print("setting freshnessCutOffValue: " + str(newConf["freshness_cut_off_value"]))
+                        if "re_route_every_ticks" in newConf:
+                            CustomRouter.reRouteEveryTicks = newConf["re_route_every_ticks"]
+                            print("setting reRouteEveryTicks: " + str(newConf["re_route_every_ticks"]))
 
             # print status update if we are not running in parallel mode
             if (cls.tick % 100) == 0 and Config.parallelMode is False:

@@ -21,9 +21,9 @@ def connect():
 
 
 # Publishes a message to the configured kafka server
-def publish(message):
+def publish(message,topic):
     if Config.kafkaUpdates:
-        producer.send(Config.kafkaTopic, message)
+        producer.send(topic, message)
     else:
         # we ignore this in json mode
         pass

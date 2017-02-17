@@ -33,7 +33,6 @@ class Network(object):
         # apply parsing to the network
         Network.__applyNetwork(parsedNetwork)
 
-
     @classmethod
     def __applyNetwork(cls, net):
         """ internal method for applying the values of a SUMO map """
@@ -52,6 +51,18 @@ class Network(object):
     def edgesCount(cls):
         """ count the edges """
         return len(cls.edges)
+
+    @classmethod
+    def getEdgeFromNode(cls, edge):
+        return edge.getFromNode()
+
+    @classmethod
+    def getEdgeByID(cls, edgeID):
+        return [x for x in cls.edges if x.getID() == edgeID][0]
+
+    @classmethod
+    def getEdgeIDsToNode(cls, edgeID):
+        return cls.getEdgeByID(edgeID).getToNode()
 
     # returns the edge position of an edge
     @classmethod

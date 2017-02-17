@@ -26,6 +26,8 @@ class CustomRouter(object):
     freshnessUpdateFactor = 10
     # defines what is the oldest value that is still a valid information
     freshnessCutOffValue = 500.0
+    # how often we reroute cars
+    reRouteEveryTicks = 0
 
     @classmethod
     def init(self):

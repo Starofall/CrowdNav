@@ -43,6 +43,8 @@ class Car:
         self.imperfection = min(0.9, max(0.1, random.gauss(0.5, 0.5)))
         # is this car a smart car
         self.smartCar = Config.smartCarPercentage > random.random()
+        # number of ticks since last reroute / arrival
+        self.lastRerouteCounter = 0
 
     def setArrived(self, tick):
         """ car arrived at its target, so we add some statistic data """
@@ -51,7 +53,7 @@ class Car:
         from app.entitiy.CarRegistry import CarRegistry
         # add a round to the car
         self.rounds += 1
-
+        self.lastRerouteCounter = 0
         if tick > 1000 and self.smartCar:  # as we ignore the first 1000 ticks for this
             # add a rounte to the global registry
             CarRegistry.totalTrips += 1
@@ -66,25 +68,24 @@ class Car:
             minimalCosts = CustomRouter.minimalRoute(self.sourceID, self.targetID, None, None).totalCost
             tripOverhead = durationForTip / minimalCosts
             CarRegistry.totalTripOverheadAverage = addToAverage(CarRegistry.totalTrips,
-                                                                  CarRegistry.totalTripOverheadAverage,
-                                                                  tripOverhead)
+                                                                CarRegistry.totalTripOverheadAverage,
+                                                                tripOverhead)
             CSVLogger.logEvent("overhead", [tick, self.sourceID, self.targetID, durationForTip,
-                                              minimalCosts, tripOverhead, self.id,self.currentRouterResult.isVictim])
+                                            minimalCosts, tripOverhead, self.id, self.currentRouterResult.isVictim])
             # log to kafka
             msg = dict()
             msg["tick"] = tick
             msg["overhead"] = tripOverhead
-            KafkaForword.publish(msg)
-    # if car is still enabled, restart it in the simulation
+            KafkaForword.publish(msg, Config.kafkaTopicTrips)
+            # if car is still enabled, restart it in the simulation
         if self.disabled is False:
             self.addToSimulation(tick)
 
     def __createNewRoute(self, tick):
         """ creates a new route to a random target and uploads this route to SUMO """
         # import here because python can not handle circular-dependencies
-        from app.entitiy.CarRegistry import CarRegistry
         if self.targetID is None:
-            self.sourceID = randomStartNodeID = random.choice(Network.nodes).getID()
+            self.sourceID = random.choice(Network.nodes).getID()
         else:
             self.sourceID = self.targetID  # We start where we stopped
         # random target
@@ -101,6 +102,26 @@ class Car:
 
     def processTick(self, tick):
         """ process changes that happened in the tick to this car """
+
+        self.lastRerouteCounter += 1
+        # reroute every x ticks based on config value
+        if self.lastRerouteCounter >= CustomRouter.reRouteEveryTicks and CustomRouter.reRouteEveryTicks > 0:
+            self.lastRerouteCounter = 0
+            if self.smartCar:
+                try:
+                    oldRoute = self.currentRouterResult.route
+                    currentEdgeID = traci.vehicle.getRoadID(self.id)
+                    nextNodeID = Network.getEdgeIDsToNode(currentEdgeID).getID()
+                    self.currentRouterResult = CustomRouter.route(nextNodeID, self.targetID, tick, self)
+                    traci.vehicle.setRoute(self.id, [currentEdgeID] + self.currentRouterResult.route)
+                    # print("OLD: " + str(oldRoute) + " - NEW: " + str(self.currentRouterResult.route))
+                except IndexError as e:
+                    # print(e)
+                    pass
+                except traci.exceptions.TraCIException as e:
+                    # print(e)
+                    pass
+
         roadID = traci.vehicle.getSubscriptionResults(self.id)[80]
         if roadID != self.currentEdgeID and self.smartCar:
             if self.currentEdgeBeginTick is not None:

@@ -9,7 +9,9 @@ kafkaUpdates = True
 kafkaHost = "kafka:9092"
 
 # the topic we send the kafka messages to
-kafkaTopic = "crowd-nav-trips"
+kafkaTopicTrips = "crowd-nav-trips"
+kafkaTopicPerformance = "crowd-nav-performance"
+kafkaTopicRouting = "crowd-nav-routing"
 
 # where we recieve system changes
 kafkaCommandsTopic = "crowd-nav-commands"
