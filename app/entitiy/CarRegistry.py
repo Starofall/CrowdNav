@@ -50,7 +50,7 @@ class CarRegistry(object):
         try:
             return CarRegistry.cars[carID]  # type: app.entitiy.Car
         except:
-            return NullCar(carID)
+            return NullCar()
 
     @classmethod
     def processTick(cls, tick):

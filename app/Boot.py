@@ -25,7 +25,7 @@ def start(processID, parallelMode,useGUI):
     Config.sumoUseGUI = useGUI
 
     info('#####################################', Fore.CYAN)
-    info('#      Starting CrowdNav v0.1       #', Fore.CYAN)
+    info('#      Starting CrowdNav v0.2       #', Fore.CYAN)
     info('#####################################', Fore.CYAN)
     info('# Configuration:', Fore.YELLOW)
     info('# Kafka-Host   -> ' + Config.kafkaHost, Fore.YELLOW)

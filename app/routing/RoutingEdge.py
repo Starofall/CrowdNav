@@ -31,10 +31,19 @@ class RoutingEdge:
         # when did we get the last infromation
         self.lastDurationUpdateTick = 0
 
-    def applyEdgeDurationToAverage(self, duration,tick):
+    def applyEdgeDurationToAverage(self, duration, tick):
         """ adds a duration to drive on this edge to the calculation """
-        self.averageDuration = addToAverage(self.averageDurationCounter,# or 100 for faster updates
-                                            self.averageDuration, duration)
+        # VARIANTE 1
+        # # if a hugh traffic happened some time ago, the new values should be more important
+        # oldDataInfluence = max(1, 20 - (tick - self.lastDurationUpdateTick))
+        # # self.averageDurationCounter += 1 -- not used
+        # self.averageDuration = addToAverage(oldDataInfluence, self.averageDuration, duration)
+        # # print(str(oldDataInfluence))
+        # self.lastDurationUpdateTick = tick
+
+        # VARIANTE 2
+        self.averageDurationCounter += 1
+        self.averageDuration = addToAverage(self.averageDurationCounter, self.averageDuration, duration)
         self.lastDurationUpdateTick = tick
 
     def __str__(self):

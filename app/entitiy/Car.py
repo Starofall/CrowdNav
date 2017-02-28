@@ -55,7 +55,7 @@ class Car:
         self.rounds += 1
         self.lastRerouteCounter = 0
         if tick > 1000 and self.smartCar:  # as we ignore the first 1000 ticks for this
-            # add a rounte to the global registry
+            # add a route to the global registry
             CarRegistry.totalTrips += 1
             # add the duration for this route to the global tripAverage
             durationForTip = (tick - self.currentRouteBeginTick)
@@ -66,7 +66,16 @@ class Car:
             #                                durationForTip, self.id,self.currentRouterResult.isVictim])
             # log the overrhead values
             minimalCosts = CustomRouter.minimalRoute(self.sourceID, self.targetID, None, None).totalCost
-            tripOverhead = durationForTip / minimalCosts
+            tripOverhead = durationForTip / minimalCosts / 1.1  # 1.6 is to correct acceleration and deceleration
+            # when the distance is very short, we have no overhead
+            if durationForTip < 10:
+                tripOverhead = 1
+            # in rare cases a trip does take very long - as most outliners are <30, we cap the overhead to 30 here
+            if tripOverhead > 30:
+                print("-> capped overhead to 30 - " + str(minimalCosts) + " - " + str(durationForTip) + " - " + str(
+                    tripOverhead))
+                tripOverhead = 30
+
             CarRegistry.totalTripOverheadAverage = addToAverage(CarRegistry.totalTrips,
                                                                 CarRegistry.totalTripOverheadAverage,
                                                                 tripOverhead)

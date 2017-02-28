@@ -15,19 +15,19 @@ class CustomRouter(object):
     graph = None
 
     # the percentage of smart cars that should be used for exploration
-    explorationPercentage = 0.0
+    explorationPercentage = 0.0 # INITIAL JSON DEFINED!!!
     # randomizes the routes
-    routeRandomSigma = 0.3
+    routeRandomSigma = 0.2 # INITIAL JSON DEFINED!!!
     # how much speed influences the routing
-    maxSpeedAndLengthFactor = 1
+    maxSpeedAndLengthFactor = 1 # INITIAL JSON DEFINED!!!
     # multiplies the average edge value
-    averageEdgeDurationFactor = 1
+    averageEdgeDurationFactor = 1 # INITIAL JSON DEFINED!!!
     # how important it is to get new data
-    freshnessUpdateFactor = 10
+    freshnessUpdateFactor = 10 # INITIAL JSON DEFINED!!!
     # defines what is the oldest value that is still a valid information
-    freshnessCutOffValue = 500.0
+    freshnessCutOffValue = 500.0 # INITIAL JSON DEFINED!!!
     # how often we reroute cars
-    reRouteEveryTicks = 0
+    reRouteEveryTicks = 20 # INITIAL JSON DEFINED!!!
 
     @classmethod
     def init(self):
@@ -52,12 +52,7 @@ class CustomRouter(object):
         """ creates a route from the f(node) to the t(node) """
         # 1) SIMPLE COST FUNCTION
         # cost_func = lambda u, v, e, prev_e: max(0,gauss(1, CustomRouter.routeRandomSigma) \
-        #                                         * (e['length']) / (e['speed'] * CustomRouter.speedInfluence) \
-        #                                         / (e['lanes'] * CustomRouter.lanesInfluence))
-
-        # 2) ONLY AverageEdgeDuration COST
-        #  cost_func = lambda u, v, e, prev_e: cls.getAverageEdgeDuration(e["edgeID"])
-
+        #                                         * (e['length']) / (e['maxSpeed']))
 
         # if car.victim:
         #     # here we reduce the cost of an edge based on how old our information is
@@ -67,14 +62,14 @@ class CustomRouter(object):
         #         (tick - (cls.edgeMap[e["edgeID"]].lastDurationUpdateTick))
         #     )
         # else:
-        # 3) Advanced cost function that combines duration with averaging
+        # 2) Advanced cost function that combines duration with averaging
         # isVictim = ??? random x percent (how many % routes have been victomized before)
         isVictim = cls.explorationPercentage > random()
         if isVictim:
             victimizationChoice = 1
         else:
             victimizationChoice = 0
-        # fresh * avg(e) + (1-fresh) * dist/(speed*spI*lanes*laneIn) * rnd - isVictom * freshFactor * fresh
+
         cost_func = lambda u, v, e, prev_e: \
             cls.getFreshness(e["edgeID"], tick) * \
             cls.averageEdgeDurationFactor * \
@@ -82,7 +77,8 @@ class CustomRouter(object):
             + \
             (1 - cls.getFreshness(e["edgeID"], tick)) * \
             cls.maxSpeedAndLengthFactor * \
-            max(0, gauss(1, cls.routeRandomSigma) * (e['length']) / e['maxSpeed']) \
+            max(1, gauss(1, cls.routeRandomSigma) *
+            (e['length']) / e['maxSpeed']) \
             - \
             (1 - cls.getFreshness(e["edgeID"], tick)) * \
             cls.freshnessUpdateFactor * \

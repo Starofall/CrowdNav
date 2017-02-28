@@ -26,10 +26,10 @@ sumoConfig = "./app/map/eichstaedt.sumo.cfg"
 sumoNet = "./app/map/eichstaedt.net.xml"
 
 # the total number of cars we use in our simulation
-totalCarCounter = 600
+totalCarCounter = 750
 
 # percentage of cars that are smart
-smartCarPercentage = 0.1
+smartCarPercentage = 1
 
 # runtime dependent variable
 processID = 0

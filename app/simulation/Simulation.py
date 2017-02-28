@@ -1,6 +1,8 @@
 import json
 import traci
 import traci.constants as tc
+from app.network.Network import Network
+
 from app.streaming import KafkaForword
 from colorama import Fore
 
@@ -81,9 +83,9 @@ class Simulation(object):
             # if we enable this we get debug information in the sumo-gui using global traveltime
             # should not be used for normal running, just for debugging
             # if (cls.tick % 10) == 0:
-            #   for e in Network.routingEdges:
-            # 1)     traci.edge.adaptTraveltime(e.id, 100*e.averageDuration/e.predictedDuration)
-            # 2)     traci.edge.adaptTraveltime(e.id, e.averageDuration)
+                # for e in Network.routingEdges:
+                # 1)     traci.edge.adaptTraveltime(e.id, 100*e.averageDuration/e.predictedDuration)
+                #     traci.edge.adaptTraveltime(e.id, e.averageDuration)
             # 3)     traci.edge.adaptTraveltime(e.id, (cls.tick-e.lastDurationUpdateTick)) # how old the data is
 
             # real time update of config if we are not in kafka mode
@@ -116,7 +118,10 @@ class Simulation(object):
                         if "re_route_every_ticks" in newConf:
                             CustomRouter.reRouteEveryTicks = newConf["re_route_every_ticks"]
                             print("setting reRouteEveryTicks: " + str(newConf["re_route_every_ticks"]))
-
+                        if "total_car_counter" in newConf:
+                            CarRegistry.totalCarCounter = newConf["total_car_counter"]
+                            CarRegistry.applyCarCounter()
+                            print("setting totalCarCounter: " + str(newConf["total_car_counter"]))
             # print status update if we are not running in parallel mode
             if (cls.tick % 100) == 0 and Config.parallelMode is False:
                 print(str(Config.processID) + " -> Step:" + str(cls.tick) + " # Driving cars: " + str(
@@ -126,13 +131,14 @@ class Simulation(object):
                     CarRegistry.totalTrips) + ")" + " # avgTripOverhead: " + str(
                     CarRegistry.totalTripOverheadAverage))
 
-            # if we are in paralllel mode we end the simulation after 10000 ticks with a result output
-            if (cls.tick % 10000) == 0 and Config.parallelMode:
-                # end the simulation here
-                print(str(Config.processID) + " -> Step:" + str(cls.tick) + " # Driving cars: " + str(
-                    traci.vehicle.getIDCount()) + "/" + str(
-                    CarRegistry.totalCarCounter) + " # avgTripDuration: " + str(
-                    CarRegistry.totalTripAverage) + "(" + str(
-                    CarRegistry.totalTrips) + ")" + " # avgTripOverhead: " + str(
-                    CarRegistry.totalTripOverheadAverage))
-                return
+                # @depricated -> will be removed
+                # # if we are in paralllel mode we end the simulation after 10000 ticks with a result output
+                # if (cls.tick % 10000) == 0 and Config.parallelMode:
+                #     # end the simulation here
+                #     print(str(Config.processID) + " -> Step:" + str(cls.tick) + " # Driving cars: " + str(
+                #         traci.vehicle.getIDCount()) + "/" + str(
+                #         CarRegistry.totalCarCounter) + " # avgTripDuration: " + str(
+                #         CarRegistry.totalTripAverage) + "(" + str(
+                #         CarRegistry.totalTrips) + ")" + " # avgTripOverhead: " + str(
+                #         CarRegistry.totalTripOverheadAverage))
+                #     return
