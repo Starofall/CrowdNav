@@ -8,7 +8,7 @@ from app.logging import CSVLogger
 from app.network.Network import Network
 from app.routing.CustomRouter import CustomRouter
 from app.routing.RouterResult import RouterResult
-from app.streaming import KafkaForword
+from app.streaming import RTXForword
 
 
 class Car:
@@ -85,7 +85,7 @@ class Car:
             msg = dict()
             msg["tick"] = tick
             msg["overhead"] = tripOverhead
-            KafkaForword.publish(msg, Config.kafkaTopicTrips)
+            RTXForword.publish(msg, Config.kafkaTopicTrips)
             # if car is still enabled, restart it in the simulation
         if self.disabled is False:
             self.addToSimulation(tick)

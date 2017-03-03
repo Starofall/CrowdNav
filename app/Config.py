@@ -4,9 +4,12 @@
 
 # should use kafka for config changes (else it uses json file)
 kafkaUpdates = True
-
 # the kafka host we want to send our messages to
 kafkaHost = "kafka:9092"
+
+mqttUpdates = True
+mqttHost = "localhost"
+mqttPort = "1883"
 
 # the topic we send the kafka messages to
 kafkaTopicTrips = "crowd-nav-trips"
@@ -30,6 +33,8 @@ totalCarCounter = 750
 
 # percentage of cars that are smart
 smartCarPercentage = 1
+
+
 
 # runtime dependent variable
 processID = 0

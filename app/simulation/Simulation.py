@@ -3,17 +3,19 @@ import traci
 import traci.constants as tc
 from app.network.Network import Network
 
-from app.streaming import KafkaForword
+from app.streaming import RTXForword
 from colorama import Fore
 
 from app import Config
 from app.entitiy.CarRegistry import CarRegistry
 from app.logging import info
 from app.routing.CustomRouter import CustomRouter
-from app.streaming import KafkaConnector
+from app.streaming import RTXConnector
 import time
 
 # get the current system time
+from app.routing.RoutingEdge import RoutingEdge
+
 current_milli_time = lambda: int(round(time.time() * 1000))
 
 
@@ -66,7 +68,7 @@ class Simulation(object):
             cls.lastTick = current_milli_time()
             msg = dict()
             msg["duration"] = duration
-            KafkaForword.publish(msg, Config.kafkaTopicPerformance)
+            RTXForword.publish(msg, Config.kafkaTopicPerformance)
 
             # Check for removed cars and re-add them into the system
             for removedCarId in traci.simulation.getSubscriptionResults()[122]:
@@ -78,7 +80,7 @@ class Simulation(object):
             # log time it takes for routing
             msg = dict()
             msg["duration"] = current_milli_time() - timeBeforeCarProcess
-            KafkaForword.publish(msg, Config.kafkaTopicRouting)
+            RTXForword.publish(msg, Config.kafkaTopicRouting)
 
             # if we enable this we get debug information in the sumo-gui using global traveltime
             # should not be used for normal running, just for debugging
@@ -95,7 +97,7 @@ class Simulation(object):
                     cls.applyFileConfig()
                 else:
                     # kafka mode
-                    newConf = KafkaConnector.checkForNewConfiguration()
+                    newConf = RTXConnector.checkForNewConfiguration()
                     if newConf is not None:
                         if "exploration_percentage" in newConf:
                             CustomRouter.explorationPercentage = newConf["exploration_percentage"]
@@ -122,6 +124,12 @@ class Simulation(object):
                             CarRegistry.totalCarCounter = newConf["total_car_counter"]
                             CarRegistry.applyCarCounter()
                             print("setting totalCarCounter: " + str(newConf["total_car_counter"]))
+                        if "edge_average_influence" in newConf:
+                            RoutingEdge.edgeAverageInfluence = newConf["edge_average_influence"]
+                            print("setting edgeAverageInfluence: " + str(newConf["edge_average_influence"]))
+
+
+
             # print status update if we are not running in parallel mode
             if (cls.tick % 100) == 0 and Config.parallelMode is False:
                 print(str(Config.processID) + " -> Step:" + str(cls.tick) + " # Driving cars: " + str(

@@ -1,6 +1,6 @@
 import os, sys
 
-from app.streaming import KafkaConnector
+from app.streaming import RTXConnector
 
 sys.path.append(os.path.join(os.environ.get("SUMO_HOME"), "tools"))
 
@@ -8,7 +8,7 @@ from app.logging import info
 from app.routing.CustomRouter import CustomRouter
 from app.network.Network import Network
 from app.simulation.Simulation import Simulation
-from streaming import KafkaForword
+from streaming import RTXForword
 from colorama import Fore
 from sumo import SUMOConnector, SUMODependency
 import Config
@@ -33,9 +33,9 @@ def start(processID, parallelMode,useGUI):
     info('# Kafka-Topic2 -> ' + Config.kafkaTopicPerformance, Fore.YELLOW)
 
     # init sending updates to kafka and getting commands from there
-    if Config.kafkaUpdates:
-        KafkaForword.connect()
-        KafkaConnector.connect()
+    if Config.kafkaUpdates or Config.mqttUpdates:
+        RTXForword.connect()
+        RTXConnector.connect()
 
     # Check if sumo is installed and available
     SUMODependency.checkDeps()

@@ -6,7 +6,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='CrowdNav',
-    version='0.1',
+    version='0.2',
     long_description="RealTime Simulation in SUMO",
     packages=find_packages(),
     include_package_data=False,
@@ -15,6 +15,7 @@ setup(
         'msgpack-python',
         'colorama',
         'kafka-python',
-        'Dijkstar'
+        'Dijkstar',
+        'paho-mqtt'
     ]
 )
