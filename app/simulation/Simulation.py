@@ -85,14 +85,14 @@ class Simulation(object):
             # if we enable this we get debug information in the sumo-gui using global traveltime
             # should not be used for normal running, just for debugging
             # if (cls.tick % 10) == 0:
-                # for e in Network.routingEdges:
-                # 1)     traci.edge.adaptTraveltime(e.id, 100*e.averageDuration/e.predictedDuration)
-                #     traci.edge.adaptTraveltime(e.id, e.averageDuration)
+            # for e in Network.routingEdges:
+            # 1)     traci.edge.adaptTraveltime(e.id, 100*e.averageDuration/e.predictedDuration)
+            #     traci.edge.adaptTraveltime(e.id, e.averageDuration)
             # 3)     traci.edge.adaptTraveltime(e.id, (cls.tick-e.lastDurationUpdateTick)) # how old the data is
 
             # real time update of config if we are not in kafka mode
-            if (cls.tick % 100) == 0:
-                if Config.kafkaUpdates is False:
+            if (cls.tick % 10) == 0:
+                if Config.kafkaUpdates is False and Config.mqttUpdates is False:
                     # json mode
                     cls.applyFileConfig()
                 else:
@@ -127,8 +127,6 @@ class Simulation(object):
                         if "edge_average_influence" in newConf:
                             RoutingEdge.edgeAverageInfluence = newConf["edge_average_influence"]
                             print("setting edgeAverageInfluence: " + str(newConf["edge_average_influence"]))
-
-
 
             # print status update if we are not running in parallel mode
             if (cls.tick % 100) == 0 and Config.parallelMode is False:

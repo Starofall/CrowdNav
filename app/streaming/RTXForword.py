@@ -25,11 +25,17 @@ def connect():
 def publish(message,topic):
     if Config.mqttUpdates:
         from paho.mqtt import publish
-        publish.single(topic, payload=json.dumps(message).encode('utf-8'),
+        try:
+            publish.single(topic, payload=json.dumps(message).encode('utf-8'),
                        qos=0, retain=False, hostname=Config.mqttHost,
                        port=Config.mqttPort, client_id="CrowdNav", keepalive=60)
+        except:
+            print("Error sending mqtt status")
     if Config.kafkaUpdates:
-        producer.send(topic, message)
+        try:
+            producer.send(topic, message)
+        except:
+            print("Error sending kafka status")
     else:
         # we ignore this in json mode
         pass

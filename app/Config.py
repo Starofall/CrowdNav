@@ -7,7 +7,7 @@ kafkaUpdates = True
 # the kafka host we want to send our messages to
 kafkaHost = "kafka:9092"
 
-mqttUpdates = True
+mqttUpdates = False
 mqttHost = "localhost"
 mqttPort = "1883"
 
@@ -16,7 +16,7 @@ kafkaTopicTrips = "crowd-nav-trips"
 kafkaTopicPerformance = "crowd-nav-performance"
 kafkaTopicRouting = "crowd-nav-routing"
 
-# where we recieve system changes
+# where we receive system changes
 kafkaCommandsTopic = "crowd-nav-commands"
 
 # True if we want to use the SUMO GUI (always of in parallel mode)
