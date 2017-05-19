@@ -28,11 +28,14 @@ sumoConfig = "./app/map/eichstaedt.sumo.cfg"
 # The network net we use for our simulation
 sumoNet = "./app/map/eichstaedt.net.xml"
 
+# Initial wait time before publishing overheads
+initialWaitTicks = 200
+
 # the total number of cars we use in our simulation
 totalCarCounter = 750
 
 # percentage of cars that are smart
-smartCarPercentage = 1
+smartCarPercentage = 0.2
 
 
 

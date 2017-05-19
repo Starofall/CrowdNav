@@ -54,39 +54,39 @@ class Car:
         # add a round to the car
         self.rounds += 1
         self.lastRerouteCounter = 0
-        if tick > 1000 and self.smartCar:  # as we ignore the first 1000 ticks for this
+        if tick > Config.initialWaitTicks and self.smartCar:  # as we ignore the first 1000 ticks for this
             # add a route to the global registry
             CarRegistry.totalTrips += 1
             # add the duration for this route to the global tripAverage
-            durationForTip = (tick - self.currentRouteBeginTick)
+            durationForTrip = (tick - self.currentRouteBeginTick)
             CarRegistry.totalTripAverage = addToAverage(CarRegistry.totalTrips,  # 100 for faster updates
                                                         CarRegistry.totalTripAverage,
-                                                        durationForTip)
+                                                        durationForTrip)
             # CSVLogger.logEvent("arrived", [tick, self.sourceID, self.targetID,
             #                                durationForTip, self.id,self.currentRouterResult.isVictim])
             # log the overrhead values
             minimalCosts = CustomRouter.minimalRoute(self.sourceID, self.targetID, None, None).totalCost
-            tripOverhead = durationForTip / minimalCosts / 1.1  # 1.6 is to correct acceleration and deceleration
+            tripOverhead = durationForTrip / minimalCosts / 1.1  # 1.6 is to correct acceleration and deceleration
             # when the distance is very short, we have no overhead
-            if durationForTip < 10:
+            if durationForTrip < 10:
                 tripOverhead = 1
-            # in rare cases a trip does take very long - as most outliners are <30, we cap the overhead to 30 here
+            # in rare cases a trip does take very long - as most outliers are <30, we cap the overhead to 30 here
             if tripOverhead > 30:
-                print("-> capped overhead to 30 - " + str(minimalCosts) + " - " + str(durationForTip) + " - " + str(
+                print("-> capped overhead to 30 - " + str(minimalCosts) + " - " + str(durationForTrip) + " - " + str(
                     tripOverhead))
                 tripOverhead = 30
 
             CarRegistry.totalTripOverheadAverage = addToAverage(CarRegistry.totalTrips,
                                                                 CarRegistry.totalTripOverheadAverage,
                                                                 tripOverhead)
-            CSVLogger.logEvent("overhead", [tick, self.sourceID, self.targetID, durationForTip,
+            CSVLogger.logEvent("overhead", [tick, self.sourceID, self.targetID, durationForTrip,
                                             minimalCosts, tripOverhead, self.id, self.currentRouterResult.isVictim])
             # log to kafka
             msg = dict()
             msg["tick"] = tick
             msg["overhead"] = tripOverhead
             RTXForword.publish(msg, Config.kafkaTopicTrips)
-            # if car is still enabled, restart it in the simulation
+        # if car is still enabled, restart it in the simulation
         if self.disabled is False:
             self.addToSimulation(tick)
 
