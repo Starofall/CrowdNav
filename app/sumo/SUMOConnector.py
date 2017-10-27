@@ -10,5 +10,5 @@ def start():
         sumoBinary = checkBinary('sumo-gui')
     else:
         sumoBinary = checkBinary('sumo')
-    traci.start([sumoBinary, "-c", Config.sumoConfig,"--no-step-log", "true","--no-warnings","true"])
+    traci.start([sumoBinary, "-c", Config.sumoConfig,"--no-step-log", "true","--no-warnings","true", "--ignore-route-errors","true"])
 
