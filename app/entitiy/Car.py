@@ -79,8 +79,8 @@ class Car:
             CarRegistry.totalTripOverheadAverage = addToAverage(CarRegistry.totalTrips,
                                                                 CarRegistry.totalTripOverheadAverage,
                                                                 tripOverhead)
-            CSVLogger.logEvent("overhead", [tick, self.sourceID, self.targetID, durationForTrip,
-                                            minimalCosts, tripOverhead, self.id, self.currentRouterResult.isVictim])
+            # CSVLogger.logEvent("overhead", [tick, self.sourceID, self.targetID, durationForTrip,
+            #                                 minimalCosts, tripOverhead, self.id, self.currentRouterResult.isVictim])
             # log to kafka
             msg = dict()
             msg["tick"] = tick
