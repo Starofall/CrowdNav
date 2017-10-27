@@ -53,7 +53,7 @@ def start(processID, parallelMode,useGUI):
     CustomRouter.init()
     # Start sumo in the background
     SUMOConnector.start()
-    info("\n# SUMO-Application started OK!", Fore.GREEN)
+    info("\n# SUMO-Application " + str(processID) + " started OK!", Fore.GREEN)
     # Start the simulation
     Simulation.start()
     # Simulation ended, so we shutdown
