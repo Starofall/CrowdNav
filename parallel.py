@@ -14,4 +14,4 @@ if __name__ == "__main__":
         processorCount = 4
     for i in range(0, processorCount):
         simulation = Popen(["python", "./run.py", str(i)])
-        print("Simulations started...")
+        print("Simulation " + str(i) + " started...")
