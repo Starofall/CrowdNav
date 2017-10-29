@@ -73,8 +73,8 @@ class Car:
                 tripOverhead = 1
             # in rare cases a trip does take very long - as most outliers are <30, we cap the overhead to 30 here
             if tripOverhead > 30:
-                print("-> capped overhead to 30 - " + str(minimalCosts) + " - " + str(durationForTrip) + " - " + str(
-                    tripOverhead))
+                # print("-> capped overhead to 30 - " + str(minimalCosts) + " - " + str(durationForTrip) + " - " + str(
+                #     tripOverhead))
                 tripOverhead = 30
 
             CarRegistry.totalTripOverheadAverage = addToAverage(CarRegistry.totalTrips,
