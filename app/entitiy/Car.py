@@ -2,6 +2,7 @@ import random
 import traci
 import traci.constants as tc
 from app import Config
+from math import log
 
 from app.Util import addToAverage
 from app.logging import CSVLogger
@@ -84,7 +85,7 @@ class Car:
             # log to kafka
             msg = dict()
             msg["tick"] = tick
-            msg["overhead"] = tripOverhead
+            msg["overhead"] = log(tripOverhead)
             RTXForword.publish(msg, Config.kafkaTopicTrips)
         # if car is still enabled, restart it in the simulation
         if self.disabled is False:
