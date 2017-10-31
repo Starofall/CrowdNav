@@ -12,7 +12,7 @@ Also runtime data is send to a kafka queue to allow stream processing and logger
 * Download the CrowdNav code
 * Run `python setup.py install` to download all dependencies 
 * Install [SUMO](http://sumo.dlr.de) & set env var SUMO_HOME
-* Install [Kafka](https://kafka.apache.org/) and set kafkaHost in Config.py
+* Install [Kafka](https://kafka.apache.org/) (we recommend [this](https://hub.docker.com/r/spotify/kafka/) Docker image) and set kafkaHost in Config.py
 * Run `python run.py`
 
 ### Operational Modes
