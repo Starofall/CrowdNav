@@ -85,7 +85,7 @@ class Car:
             # log to kafka
             msg = dict()
             msg["tick"] = tick
-            msg["overhead"] = log(tripOverhead)
+            msg["overhead"] = tripOverhead
             RTXForword.publish(msg, Config.kafkaTopicTrips)
         # if car is still enabled, restart it in the simulation
         if self.disabled is False:
