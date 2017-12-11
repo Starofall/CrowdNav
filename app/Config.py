@@ -34,7 +34,10 @@ initialWaitTicks = 200
 # the total number of cars we use in our simulation
 totalCarCounter = 750
 
+smartCarCounter = 150
+
 # percentage of cars that are smart
+# DEPRECATED - USE smartCarCounter instead
 smartCarPercentage = 0.2
 
 

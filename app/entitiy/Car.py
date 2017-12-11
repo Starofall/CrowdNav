@@ -17,7 +17,7 @@ class Car:
 
     def __init__(self, id):
         # the string id
-        self.id = id  # type: str
+        self.id = "car-" + str(id)  # type: str
         # the rounds this car already drove
         self.rounds = 0  # type: int
         # the current route as a RouterResult
@@ -43,9 +43,18 @@ class Car:
         # the driver imperfection in handling the car
         self.imperfection = min(0.9, max(0.1, random.gauss(0.5, 0.5)))
         # is this car a smart car
-        self.smartCar = Config.smartCarPercentage > random.random()
+        self.smartCar = id <= Config.smartCarCounter
+        # old way of determining smart cars:
+        # self.smartCar = Config.smartCarPercentage > random.random()
         # number of ticks since last reroute / arrival
         self.lastRerouteCounter = 0
+
+        # just to make the setup less random
+        print (float(Config.smartCarCounter) / 2)
+        self.explicitRoute = id <= float(Config.smartCarCounter) / 2
+        self.target1 = "64"
+        self.target2 = "2284"
+        self.isTarget1 = True
 
     def setArrived(self, tick):
         """ car arrived at its target, so we add some statistic data """
@@ -98,8 +107,18 @@ class Car:
             self.sourceID = random.choice(Network.nodes).getID()
         else:
             self.sourceID = self.targetID  # We start where we stopped
-        # random target
-        self.targetID = random.choice(Network.nodes).getID()
+
+        if self.smartCar and self.explicitRoute:
+            if self.isTarget1:
+                self.targetID = self.target1
+                self.isTarget1 = False
+            else:
+                self.targetID = self.target2
+                self.isTarget1 = True
+        else:
+            self.targetID = random.choice(Network.nodes).getID()
+            print "** self.targetID: " + self.targetID
+            
         self.currentRouteID = self.id + "-" + str(self.rounds)
         self.currentRouterResult = CustomRouter.route(self.sourceID, self.targetID, tick, self)
         if len(self.currentRouterResult.route) > 0:

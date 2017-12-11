@@ -36,7 +36,7 @@ class CarRegistry(object):
         while len(CarRegistry.cars) < cls.totalCarCounter:
             # to less cars -> add new
             cls.carIndexCounter += 1
-            c = Car("car-" + str(CarRegistry.carIndexCounter))
+            c = Car(cls.carIndexCounter)
             cls.cars[c.id] = c
             c.addToSimulation(0)
         while len(CarRegistry.cars) > cls.totalCarCounter:
