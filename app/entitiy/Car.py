@@ -50,7 +50,6 @@ class Car:
         self.lastRerouteCounter = 0
 
         # just to make the setup less random
-        print (float(Config.smartCarCounter) / 2)
         self.explicitRoute = id <= float(Config.smartCarCounter) / 2
         self.target1 = "64"
         self.target2 = "2284"
@@ -117,8 +116,7 @@ class Car:
                 self.isTarget1 = True
         else:
             self.targetID = random.choice(Network.nodes).getID()
-            print "** self.targetID: " + self.targetID
-            
+
         self.currentRouteID = self.id + "-" + str(self.rounds)
         self.currentRouterResult = CustomRouter.route(self.sourceID, self.targetID, tick, self)
         if len(self.currentRouterResult.route) > 0:
