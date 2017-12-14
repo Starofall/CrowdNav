@@ -15,6 +15,9 @@ Also runtime data is send to a kafka queue to allow stream processing and logger
 * Install [Kafka](https://kafka.apache.org/) (we recommend [this](https://hub.docker.com/r/spotify/kafka/) Docker image) and set kafkaHost in Config.py
 * Run `python run.py`
 
+### Getting Started Guide
+A first guide on how to use (i.e. adapt, measure, optimize) CrowdNav with the [RTX tool](https://github.com/Starofall/RTX) is available at this [Wiki page](https://github.com/Starofall/RTX/wiki/RTX-&-CrowdNav-Getting-Started-Guide). 
+
 ### Operational Modes
 
 * Normal mode (`python run.py`) with UI to Debug the application. Runs forever.
