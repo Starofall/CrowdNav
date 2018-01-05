@@ -5,7 +5,7 @@
 # should use kafka for config changes (else it uses json file)
 kafkaUpdates = True
 # the kafka host we want to send our messages to
-kafkaHost = "kafka:9092"
+kafkaHost = "exp1:9092"
 
 mqttUpdates = False
 mqttHost = "localhost"
@@ -34,7 +34,7 @@ initialWaitTicks = 200
 # the total number of cars we use in our simulation
 totalCarCounter = 750
 
-smartCarCounter = 150
+smartCarCounter = 750
 
 # percentage of cars that are smart
 # DEPRECATED - USE smartCarCounter instead
