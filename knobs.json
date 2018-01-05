@@ -8,9 +8,9 @@
   "averageEdgeDurationFactorDescription": "how much the averageEdgeFactor influences the routing",
   "averageEdgeDurationFactor": 1,
   "freshnessUpdateFactorDescription": "how much the freshnessUpdateFactor influences the routing",
-  "freshnessUpdateFactor": 10,
+  "freshnessUpdateFactor": 5,
   "freshnessCutOffValueDescription": "if data is older than this we do not consider it in the algorithm",
-  "freshnessCutOffValue": 90,
+  "freshnessCutOffValue": 100,
   "reRouteEveryTicksDescription": "check for a new route very x times after the car starts",
-  "reRouteEveryTicks": 60
+  "reRouteEveryTicks": 10
 }
