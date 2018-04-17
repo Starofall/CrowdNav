@@ -49,6 +49,11 @@ class Car:
         # number of ticks since last reroute / arrival
         self.lastRerouteCounter = 0
 
+        self.explicitRoute = True
+        self.target1 = "64"
+        self.target2 = "2284"
+        self.isTarget1 = True
+
     def setArrived(self, tick):
         """ car arrived at its target, so we add some statistic data """
 
@@ -89,6 +94,7 @@ class Car:
             msg["tick"] = tick
             msg["overhead"] = tripOverhead
             msg["complaint"] = self.generate_complaint(tripOverhead)
+            msg["minimalCosts"] = minimalCosts
             RTXForword.publish(msg, Config.kafkaTopicTrips)
 
         # if car is still enabled, restart it in the simulation
@@ -110,7 +116,15 @@ class Car:
         else:
             self.sourceID = self.targetID  # We start where we stopped
 
-        self.targetID = random.choice(Network.nodes).getID()
+        if self.smartCar and self.explicitRoute:
+            if self.isTarget1:
+                self.targetID = self.target1
+                self.isTarget1 = False
+            else:
+                self.targetID = self.target2
+                self.isTarget1 = True
+        else:
+            self.targetID = random.choice(Network.nodes).getID()
         self.currentRouteID = self.id + "-" + str(self.rounds)
         self.currentRouterResult = CustomRouter.route(self.sourceID, self.targetID, tick, self)
         if len(self.currentRouterResult.route) > 0:
