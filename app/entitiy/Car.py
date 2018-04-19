@@ -139,11 +139,6 @@ class Car:
             else:
                 self.targetID = self.possible_routes[self.sourceID]
 
-            print "*********"
-            print "self.sourceID: " + self.sourceID
-            print "self.targetID: " + self.targetID
-            print "*********"
-
             # if self.isTarget1:
             #     self.targetID = self.target1
             #     self.isTarget1 = False
