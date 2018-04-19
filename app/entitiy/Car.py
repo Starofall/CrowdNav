@@ -3,6 +3,7 @@ import traci
 import traci.constants as tc
 from app import Config
 from math import log
+import random
 
 from app.Util import addToAverage
 from app.logging import CSVLogger
@@ -49,10 +50,21 @@ class Car:
         # number of ticks since last reroute / arrival
         self.lastRerouteCounter = 0
 
-        self.explicitRoute = True
-        self.target1 = "64"
-        self.target2 = "2284"
-        self.isTarget1 = True
+        self.explicitSource = True
+        self.explicitDestination = True
+        # self.target1 = "885"
+        # self.target2 = "2284"
+        # self.isTarget1 = True
+
+        self.destinations = ["2284", "885", "621", "1176", "1934", "271"]
+
+        self.possible_routes = dict()
+        self.possible_routes["885"] = "2284"
+        self.possible_routes["2284"] = "885"
+        self.possible_routes["1176"] = "621"
+        self.possible_routes["621"] = "1176"
+        self.possible_routes["271"] = "1934"
+        self.possible_routes["1934"] = "271"
 
     def setArrived(self, tick):
         """ car arrived at its target, so we add some statistic data """
@@ -103,7 +115,6 @@ class Car:
             self.addToSimulation(tick)
 
     def generate_complaint(self, overhead):
-        import random
         if overhead > 2.5 and random.random() > 0.5:
             return 1
         else:
@@ -115,15 +126,30 @@ class Car:
         if self.targetID is None:
             self.sourceID = random.choice(Network.nodes).getID()
         else:
-            self.sourceID = self.targetID  # We start where we stopped
-
-        if self.smartCar and self.explicitRoute:
-            if self.isTarget1:
-                self.targetID = self.target1
-                self.isTarget1 = False
+            if self.smartCar and self.explicitSource:
+                # self.sourceID = random.choice(self.destinations)
+                self.sourceID = self.targetID
             else:
-                self.targetID = self.target2
-                self.isTarget1 = True
+                self.sourceID = self.targetID  # We start where we stopped
+
+        if self.smartCar and self.explicitDestination:
+
+            if self.targetID is None:
+                self.targetID = random.choice(self.destinations)
+            else:
+                self.targetID = self.possible_routes[self.sourceID]
+
+            print "*********"
+            print "self.sourceID: " + self.sourceID
+            print "self.targetID: " + self.targetID
+            print "*********"
+
+            # if self.isTarget1:
+            #     self.targetID = self.target1
+            #     self.isTarget1 = False
+            # else:
+            #     self.targetID = self.target2
+            #     self.isTarget1 = True
         else:
             self.targetID = random.choice(Network.nodes).getID()
         self.currentRouteID = self.id + "-" + str(self.rounds)
