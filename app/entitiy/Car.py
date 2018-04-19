@@ -95,6 +95,7 @@ class Car:
             msg["overhead"] = tripOverhead
             msg["complaint"] = self.generate_complaint(tripOverhead)
             msg["minimalCosts"] = minimalCosts
+            msg["durationForTrip"] = durationForTrip
             RTXForword.publish(msg, Config.kafkaTopicTrips)
 
         # if car is still enabled, restart it in the simulation
