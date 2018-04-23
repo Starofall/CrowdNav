@@ -70,7 +70,15 @@ class CustomRouter(object):
         else:
             victimizationChoice = 0
 
-        cost_func = lambda u, v, e, prev_e: max(1, gauss(1, cls.routeRandomSigma) * (e['length']) / e['maxSpeed'])
+        # cost_func = lambda u, v, e, prev_e: max(1, gauss(1, cls.routeRandomSigma) * (e['length']) / e['maxSpeed'])
+
+        cost_func = lambda u, v, e, prev_e: \
+            cls.getFreshness(e["edgeID"], tick) * \
+            cls.getAverageEdgeDuration(e["edgeID"]) \
+            + \
+            (1 - cls.getFreshness(e["edgeID"], tick)) * \
+            max(1, gauss(1, cls.routeRandomSigma) *
+                (e['length']) / e['maxSpeed']) \
 
         # cost_func = lambda u, v, e, prev_e: \
         #     cls.getFreshness(e["edgeID"], tick) * \
