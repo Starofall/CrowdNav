@@ -1,20 +1,27 @@
 from flask import Flask , jsonify
-from app.simulation.Simulation import Simulation
 from endpoints import get_monitor , getAdaptationOptions , getexecute
+
+import os
+import sys
+
+# Get the path to the parent directory of the package
+package_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+
+# Add the parent directory to the Python path
+sys.path.append(package_path)
+
+# Now you can import your module
+from simulation.Simulation import Simulation
 
 app = Flask(__name__)
 
 @app.route('/monitor', methods=['GET'])
 def monitor():
-  Simulation.start()
+    # Retrieve monitored data from the simulation
+    monitored_data = Simulation.get_monitored_data()
 
-while True:
-            # Retrieve real-time data from the simulation
-            real_time_data = Simulation.get_real_time_data()
-            print("Real-time data from simulation:", real_time_data)
-            
-            time.sleep(5)  # Adjust the sleep duration based on your requirements
-
+    # Return the monitored data as JSON
+    return jsonify(monitored_data)
     
 @app.route('/execute', methods=['PUT'])
 def execute_adaptation():
@@ -42,5 +49,4 @@ def get_adaptation_options_schema():
 
 if __name__ == '__main__':
     app.run(debug=True)
-
 

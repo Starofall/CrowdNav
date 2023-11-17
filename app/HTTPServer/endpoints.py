@@ -1,17 +1,25 @@
 from flask import Flask, jsonify, request
-import json
+import json 
 
-from app.simulation.Simulation import Simulation 
+import sys
+import sys
+import os
 
+# Get the path to the parent directory of the package
+package_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 
-@app.route('/monitor', methods=['GET'])
-def monitor():
-    # Retrieve real-time data from the simulation
-    real_time_data = Simulation.get_real_time_data()
-    
-    # Return the real-time data as JSON
-    return jsonify(real_time_data)
-  
+# Add the parent directory to the Python path
+sys.path.append(package_path)
+
+# Now you can import your module
+from simulation.Simulation import Simulation
+
+def get_monitor():
+    # Retrieve monitored data from the simulation
+    monitored_data = Simulation.get_monitored_data()
+
+    # Return the monitored data as JSON
+    return jsonify(monitored_data)
 
 # Construct the path to the knobs.json file, assuming it's two directories back
 json_file_path = '../../knobs.json'
@@ -52,6 +60,5 @@ def getexecute():
     
 def getAdaptationOptions():
     return adaptation_options_data
-
 
 
