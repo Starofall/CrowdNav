@@ -1,19 +1,20 @@
 from flask import Flask , jsonify
+from app.simulation.Simulation import Simulation
 from endpoints import get_monitor , getAdaptationOptions , getexecute
 
 app = Flask(__name__)
 
 @app.route('/monitor', methods=['GET'])
 def monitor():
-    try:
-        data = get_monitor()
-        return jsonify(data)
+  Simulation.start()
 
-    except FileNotFoundError:
-        return jsonify({"error": "Monitor data not found"}), 404
+while True:
+            # Retrieve real-time data from the simulation
+            real_time_data = Simulation.get_real_time_data()
+            print("Real-time data from simulation:", real_time_data)
+            
+            time.sleep(5)  # Adjust the sleep duration based on your requirements
 
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
     
 @app.route('/execute', methods=['PUT'])
 def execute_adaptation():
@@ -41,4 +42,5 @@ def get_adaptation_options_schema():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
 

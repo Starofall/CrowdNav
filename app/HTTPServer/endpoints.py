@@ -1,20 +1,16 @@
 from flask import Flask, jsonify, request
-import json 
+import json
+
+from app.simulation.Simulation import Simulation 
 
 
-def get_monitor():
-    file_path = "./monitor_data.json"
-
-    try:
-        with open(file_path, 'r') as json_file:
-            data = json.load(json_file)
-        return data
+@app.route('/monitor', methods=['GET'])
+def monitor():
+    # Retrieve real-time data from the simulation
+    real_time_data = Simulation.get_real_time_data()
     
-    except FileNotFoundError:
-        raise FileNotFoundError("Monitor data not found")
-
-    except Exception as e:
-        raise e
+    # Return the real-time data as JSON
+    return jsonify(real_time_data)
   
 
 # Construct the path to the knobs.json file, assuming it's two directories back
@@ -56,5 +52,6 @@ def getexecute():
     
 def getAdaptationOptions():
     return adaptation_options_data
+
 
 
