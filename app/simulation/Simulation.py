@@ -136,7 +136,25 @@ class Simulation(object):
                     CarRegistry.totalTripAverage) + "(" + str(
                     CarRegistry.totalTrips) + ")" + " # avgTripOverhead: " + str(
                     CarRegistry.totalTripOverheadAverage))
+                file_path = "./monitor_data.json"
+                data =  {
+                        'totalCarCounter': CarRegistry.totalCarCounter,
+                        'carIndexCounter': CarRegistry.carIndexCounter,
+                        'totalTrips': CarRegistry.totalTrips,
+                        'totalTripAverage': CarRegistry.totalTripAverage,
+                        'totalTripOverheadAverage': CarRegistry.totalTripOverheadAverage
+                    }
+                # Open the file in write mode ('w')
+                with open(file_path, 'w') as json_file:
+                    # Use json.dump() to write data to the file
+                    json.dump(data, json_file)
 
+
+                with open(file_path, "r") as json_file:
+    # Load the JSON data
+                     data = json.load(json_file)
+                
+                print("####JSON file", data)
                 # @depricated -> will be removed
                 # # if we are in paralllel mode we end the simulation after 10000 ticks with a result output
                 # if (cls.tick % 10000) == 0 and Config.parallelMode:
@@ -148,3 +166,14 @@ class Simulation(object):
                 #         CarRegistry.totalTrips) + ")" + " # avgTripOverhead: " + str(
                 #         CarRegistry.totalTripOverheadAverage))
                 #     return
+    @classmethod
+    def get_monitored_data(cls):
+        # Add logic here to collect the data you want to monitor
+        monitored_data = {
+            'vehicle_count': traci.vehicle.getIDCount(),
+            'avg_trip_duration': CarRegistry.totalTripAverage,
+            'total_trips': CarRegistry.totalTrips,
+            'avg_trip_overhead': CarRegistry.totalTripOverheadAverage
+            # Add more data as needed
+        }
+        return monitored_data
