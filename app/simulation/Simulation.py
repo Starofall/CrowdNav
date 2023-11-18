@@ -2,6 +2,8 @@ import json
 import traci
 import traci.constants as tc
 from app.network.Network import Network
+from flask import Flask , jsonify
+from views import MonitorAPI, ExecuteAPI, AdaptationOptionsAPI, ExecuteSchemaAPI, AdaptationOptionsSchemaAPI
 
 from app.streaming import RTXForword
 from colorama import Fore
@@ -21,6 +23,7 @@ current_milli_time = lambda: int(round(time.time() * 1000))
 
 class Simulation(object):
     """ here we run the simulation in """
+    app = Flask(__name__)
 
     # the current tick of the simulation
     tick = 0
@@ -41,6 +44,17 @@ class Simulation(object):
             CustomRouter.reRouteEveryTicks = config['reRouteEveryTicks']
         except:
             pass
+    
+    @classmethod
+    def registerHTTPServer(cls):
+        # Register the views with the app
+        cls.app.add_url_rule('/monitor', view_func=MonitorAPI.as_view('monitor'))
+        cls.app.add_url_rule('/execute', view_func=ExecuteAPI.as_view('execute'))
+        cls.app.add_url_rule('/adaptation_options', view_func=AdaptationOptionsAPI.as_view('adaptation_options'))
+        cls.app.add_url_rule('/execute_schema', view_func=ExecuteSchemaAPI.as_view('execute_schema'))
+        cls.app.add_url_rule('/adaptation_options_schema', view_func=AdaptationOptionsSchemaAPI.as_view('adaptation_options_schema'))
+        cls.app.run(debug=True)
+    
 
     @classmethod
     def start(cls):
@@ -49,6 +63,7 @@ class Simulation(object):
         # apply the configuration from the json file
         cls.applyFileConfig()
         CarRegistry.applyCarCounter()
+        cls.registerHTTPServer()
         cls.loop()
 
     @classmethod
