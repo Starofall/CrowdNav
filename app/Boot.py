@@ -8,12 +8,11 @@ from app.logging import info
 from app.routing.CustomRouter import CustomRouter
 from app.network.Network import Network
 from app.simulation.Simulation import Simulation
-from streaming import RTXForword
+from app.streaming import RTXForword
 from colorama import Fore
-from sumo import SUMOConnector, SUMODependency
-import Config
+from app.sumo import SUMOConnector, SUMODependency
+from app import Config
 import traci, sys, os
-import thread
 import time
 
 

@@ -2,8 +2,8 @@ import json
 import traci
 import traci.constants as tc
 from app.network.Network import Network
-from flask import Flask , jsonify
-from views import MonitorAPI, ExecuteAPI, AdaptationOptionsAPI, ExecuteSchemaAPI, AdaptationOptionsSchemaAPI
+from flask import Flask , jsonify , views
+from app.HTTPServer.main import MonitorAPI, ExecuteAPI, AdaptationOptionsAPI, ExecuteSchemaAPI, AdaptationOptionsSchemaAPI
 
 from app.streaming import RTXForword
 from colorama import Fore
@@ -181,6 +181,7 @@ class Simulation(object):
                 #         CarRegistry.totalTrips) + ")" + " # avgTripOverhead: " + str(
                 #         CarRegistry.totalTripOverheadAverage))
                 #     return
+
     @classmethod
     def get_monitored_data(cls):
         # Add logic here to collect the data you want to monitor
