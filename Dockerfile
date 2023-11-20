@@ -1,23 +1,12 @@
-FROM python:2.7
+FROM starofall/crowdnav
 
+ADD  /app/HTTPServer /app/HTTPServer
+COPY knobs.json knobs.json
 
-RUN apt-get update &&              \
-  apt-get install -y             \
-    build-essential              \
-    git                          \
-    libxerces-c-dev
-
-RUN mkdir -p /opt
-RUN (cd /opt; git clone https://github.com/radiganm/sumo.git)
-RUN (cd /opt/sumo; ./configure)
-RUN (cd /opt/sumo; make)
-RUN (cd /opt/sumo; make install)
-
-ENV SUMO_HOME /opt/sumo
-# First cache dependencies
-ADD ./setup.py /app/setup.py
-RUN python /app/setup.py install
-# Add sources
-ADD ./ /app/
 WORKDIR /app
-CMD ["python","/app/forever.py"]
+
+COPY . /app 
+RUN pip install flask
+
+WORKDIR /app/HTTPServer
+CMD [ "python" , "main.py"  ] 
