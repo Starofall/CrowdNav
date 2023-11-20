@@ -1,12 +1,11 @@
 from flask import Flask, jsonify, request
 from flask.views import MethodView
 import json
-
+import os
 app = Flask(__name__)
 
 knobs_path = '../../knobs.json'
-monitor_data_path = 'app/simulation/monitor_data.json'
-
+monitor_data_path = os.path.join(os.path.dirname(__file__), '..', 'simulation', 'monitor_data.json')
 def read_knobs():
     """Read the knobs.json file."""
     try:
@@ -23,12 +22,12 @@ def write_knobs(data):
 
 class MonitorAPI(MethodView):
     def get(self):
-        try:
-            with open(monitor_data_path, "r") as json_file:
-                data = json.load(json_file)
-            return jsonify(data)
-        except FileNotFoundError:
-            return jsonify({'error': 'monitor_data.json not found'}), 404
+        # try:
+        with open(monitor_data_path, "r") as json_file:
+            data = json.load(json_file)
+        return jsonify(data)
+        # except FileNotFoundError:
+            # return jsonify({'error': 'monitor_data.json not found'}), 404
 
 class ExecuteAPI(MethodView):
     def put(self):
@@ -161,13 +160,13 @@ class AdaptationOptionsSchemaAPI(MethodView):
         }
         return jsonify(schema)
 
-# Registering the views
-app.add_url_rule('/monitor', view_func=MonitorAPI.as_view('monitor_api'))
-app.add_url_rule('/execute', view_func=ExecuteAPI.as_view('execute_api'))
-app.add_url_rule('/adaptation_options', view_func=AdaptationOptionsAPI.as_view('adaptation_options_api'))
-app.add_url_rule('/execute_schema', view_func=ExecuteSchemaAPI.as_view('execute_schema_api'))
-app.add_url_rule('/adaptation_options_schema', view_func=AdaptationOptionsSchemaAPI.as_view('adaptation_options_schema_api'))
-app.add_url_rule('/monitor_schema', view_func=MonitorSchemaAPI.as_view('monitor_schema_api'))
 
 if __name__ == '__main__':
+    # Registering the views
+    app.add_url_rule('/monitor', view_func=MonitorAPI.as_view('monitor_api'))
+    app.add_url_rule('/execute', view_func=ExecuteAPI.as_view('execute_api'))
+    app.add_url_rule('/adaptation_options', view_func=AdaptationOptionsAPI.as_view('adaptation_options_api'))
+    app.add_url_rule('/execute_schema', view_func=ExecuteSchemaAPI.as_view('execute_schema_api'))
+    app.add_url_rule('/adaptation_options_schema', view_func=AdaptationOptionsSchemaAPI.as_view('adaptation_options_schema_api'))
+    app.add_url_rule('/monitor_schema', view_func=MonitorSchemaAPI.as_view('monitor_schema_api'))
     app.run(host='0.0.0.0', port=5000)

@@ -53,7 +53,7 @@ class Simulation(object):
         cls.app.add_url_rule('/adaptation_options', view_func=AdaptationOptionsAPI.as_view('adaptation_options'))
         cls.app.add_url_rule('/execute_schema', view_func=ExecuteSchemaAPI.as_view('execute_schema'))
         cls.app.add_url_rule('/adaptation_options_schema', view_func=AdaptationOptionsSchemaAPI.as_view('adaptation_options_schema'))
-        cls.app.run(debug=True)
+        cls.app.run(host='0.0.0.0', port=5000)
     
 
     @classmethod
@@ -165,11 +165,6 @@ class Simulation(object):
                     json.dump(data, json_file)
 
 
-                with open(file_path, "r") as json_file:
-    # Load the JSON data
-                     data = json.load(json_file)
-                
-                print("####JSON file", data)
                 # @depricated -> will be removed
                 # # if we are in paralllel mode we end the simulation after 10000 ticks with a result output
                 # if (cls.tick % 10000) == 0 and Config.parallelMode:
@@ -181,15 +176,3 @@ class Simulation(object):
                 #         CarRegistry.totalTrips) + ")" + " # avgTripOverhead: " + str(
                 #         CarRegistry.totalTripOverheadAverage))
                 #     return
-
-    @classmethod
-    def get_monitored_data(cls):
-        # Add logic here to collect the data you want to monitor
-        monitored_data = {
-            'vehicle_count': traci.vehicle.getIDCount(),
-            'avg_trip_duration': CarRegistry.totalTripAverage,
-            'total_trips': CarRegistry.totalTrips,
-            'avg_trip_overhead': CarRegistry.totalTripOverheadAverage
-            # Add more data as needed
-        }
-        return monitored_data
