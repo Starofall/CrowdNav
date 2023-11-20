@@ -71,11 +71,95 @@ class MonitorSchemaAPI(MethodView):
 
 class ExecuteSchemaAPI(MethodView):
     def get(self):
-        return jsonify({"execute_schema": "This is /execute_schema endpoint"})
+        schema = {
+            'type': 'object',
+            'properties': {
+                'routeRandomSigma': {
+                    'type': 'number',
+                    'description': 'The randomization sigma of edge weights'
+                },
+                'explorationPercentage': {
+                    'type': 'number',
+                    'description': 'The percentage of routes used for exploration'
+                },
+                'maxSpeedAndLengthFactor': {
+                    'type': 'integer',
+                    'description': 'How much the length/speed influences the routing'
+                },
+                'averageEdgeDurationFactor': {
+                    'type': 'integer',
+                    'description': 'How much the average edge factor influences the routing'
+                },
+                'freshnessUpdateFactor': {
+                    'type': 'integer',
+                    'description': 'How much the freshness update factor influences the routing'
+                },'freshnessCutOffValue': {
+                    'type': 'integer',
+                    'description': 'If data is older than this, it is not considered in the algorithm'
+                },
+                'reRouteEveryTicks': {
+                    'type': 'integer',
+                    'description': 'Check for a new route every x times after the car starts'
+                },
+                # Add more properties as needed
+            },
+            'required': [
+                'routeRandomSigma',
+                'explorationPercentage',
+                'maxSpeedAndLengthFactor',
+                'averageEdgeDurationFactor',
+                'freshnessUpdateFactor',
+                'freshnessCutOffValue',
+                'reRouteEveryTicks'
+            ],
+        }
+        return jsonify(schema)
 
 class AdaptationOptionsSchemaAPI(MethodView):
     def get(self):
-        return jsonify({"adaptation_options_schema": "This is /adaptation_options_schema endpoint"})
+        schema = {
+            'type': 'object',
+            'properties': {
+                'routeRandomSigma': {
+                    'type': 'number',
+                    'description': 'The randomization sigma of edge weights'
+                },
+                'explorationPercentage': {
+                    'type': 'number',
+                    'description': 'The percentage of routes used for exploration'
+                },
+                'maxSpeedAndLengthFactor': {
+                    'type': 'integer',
+                    'description': 'How much the length/speed influences the routing'
+                },
+                'averageEdgeDurationFactor': {
+                    'type': 'integer',
+                    'description': 'How much the average edge factor influences the routing'
+                },
+                'freshnessUpdateFactor': {
+                    'type': 'integer',
+                    'description': 'How much the freshness update factor influences the routing'
+                },'freshnessCutOffValue': {
+                    'type': 'integer',
+                    'description': 'If data is older than this, it is not considered in the algorithm'
+                },
+                'reRouteEveryTicks': {
+                    'type': 'integer',
+                    'description': 'Check for a new route every x times after the car starts'
+                },
+                # Add more properties as needed
+            },
+            'required': [
+                'routeRandomSigma',
+                'explorationPercentage',
+                'maxSpeedAndLengthFactor',
+                'averageEdgeDurationFactor',
+                'freshnessUpdateFactor',
+                'freshnessCutOffValue',
+                'reRouteEveryTicks'
+            ],
+        }
+        return jsonify(schema)
 
 # Registering the views
 app.add_url_rule('/monitor', view_func=MonitorAPI.as_view('monitor_api'))

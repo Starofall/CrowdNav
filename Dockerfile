@@ -21,8 +21,8 @@ RUN pip install flask
 #WORKDIR /app/
 #RUN python forever.py
 
-WORKDIR /app/
-RUN python forever.py
+#WORKDIR /app/
+#RUN python forever.py
 
 WORKDIR /app/HTTPServer
 CMD [ "python" , "main.py"  ] 
