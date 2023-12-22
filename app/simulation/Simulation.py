@@ -2,8 +2,6 @@ import json
 import traci
 import traci.constants as tc
 from app.network.Network import Network
-from flask import Flask , jsonify , views
-from app.HTTPServer.main import MonitorAPI, ExecuteAPI, AdaptationOptionsAPI, ExecuteSchemaAPI, AdaptationOptionsSchemaAPI
 
 from app.streaming import RTXForword
 from colorama import Fore
@@ -23,7 +21,6 @@ current_milli_time = lambda: int(round(time.time() * 1000))
 
 class Simulation(object):
     """ here we run the simulation in """
-    app = Flask(__name__)
 
     # the current tick of the simulation
     tick = 0
@@ -46,24 +43,12 @@ class Simulation(object):
             pass
     
     @classmethod
-    def registerHTTPServer(cls):
-        # Register the views with the app
-        cls.app.add_url_rule('/monitor', view_func=MonitorAPI.as_view('monitor'))
-        cls.app.add_url_rule('/execute', view_func=ExecuteAPI.as_view('execute'))
-        cls.app.add_url_rule('/adaptation_options', view_func=AdaptationOptionsAPI.as_view('adaptation_options'))
-        cls.app.add_url_rule('/execute_schema', view_func=ExecuteSchemaAPI.as_view('execute_schema'))
-        cls.app.add_url_rule('/adaptation_options_schema', view_func=AdaptationOptionsSchemaAPI.as_view('adaptation_options_schema'))
-        cls.app.run(host='0.0.0.0', port=5000)
-    
-
-    @classmethod
     def start(cls):
         """ start the simulation """
         info("# Start adding initial cars to the simulation", Fore.MAGENTA)
         # apply the configuration from the json file
         cls.applyFileConfig()
         CarRegistry.applyCarCounter()
-        cls.registerHTTPServer()
         cls.loop()
 
     @classmethod
@@ -151,17 +136,19 @@ class Simulation(object):
                     CarRegistry.totalTripAverage) + "(" + str(
                     CarRegistry.totalTrips) + ")" + " # avgTripOverhead: " + str(
                     CarRegistry.totalTripOverheadAverage))
-                file_path = "./monitor_data.json"
+                
+                # Write monitoring data to json file 
+                file_path = "app/HTTPServer/monitor_data.json"
                 data =  {
+                        'step': str(Config.processID),
+                        'currentCars': traci.vehicle.getIDCount(),
                         'totalCarCounter': CarRegistry.totalCarCounter,
                         'carIndexCounter': CarRegistry.carIndexCounter,
                         'totalTrips': CarRegistry.totalTrips,
                         'totalTripAverage': CarRegistry.totalTripAverage,
                         'totalTripOverheadAverage': CarRegistry.totalTripOverheadAverage
                     }
-                # Open the file in write mode ('w')
                 with open(file_path, 'w') as json_file:
-                    # Use json.dump() to write data to the file
                     json.dump(data, json_file)
 
 
