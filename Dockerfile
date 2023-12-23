@@ -1,12 +1,20 @@
 FROM starofall/crowdnav
 
-ADD  /app/HTTPServer /app/HTTPServer
-COPY knobs.json knobs.json
+COPY . .
+
+# WORKDIR /app
+
+# COPY . /app 
+RUN pip install flask
+
+COPY ./start.sh /app
+
+# WORKDIR /app
+
+EXPOSE 5000
 
 WORKDIR /app
 
-COPY . /app 
-RUN pip install flask
+RUN chmod 777 ./start.sh
 
-WORKDIR /app/HTTPServer
-CMD [ "python" , "main.py"  ] 
+CMD ["bash", "start.sh"]

@@ -13,6 +13,7 @@ from colorama import Fore
 from app.sumo import SUMOConnector, SUMODependency
 from app import Config
 import traci, sys, os
+#import thread
 import time
 
 

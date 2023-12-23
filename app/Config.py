@@ -9,7 +9,7 @@ kafkaHost = "kafka:9092"
 
 mqttUpdates = False
 mqttHost = "localhost"
-mqttPort = "1883" #1883
+mqttPort = "1883"
 
 # the topic we send the kafka messages to
 kafkaTopicTrips = "crowd-nav-trips"
