@@ -1,55 +1,33 @@
 from flask import Flask, jsonify
 from flask.views import MethodView
 import json
-from endpoints import getAdaptationOptions 
+from endpoints import  getexecute
 
 app = Flask(__name__)
 
 knobs_path = '../../knobs.json'
 
 
-def read_knobs():
-    """Read the knobs.json file."""
+@app.route('/monitor', methods=['GET'])
+def get():
     try:
-        with open(knobs_path, 'r') as file:
-            knobs_data = json.load(file)
-        return knobs_data
+        file_path = "./monitor_data.json"
+        with open(file_path, "r") as json_file:
+            data = json.load(json_file)
+        return jsonify(data)
     except FileNotFoundError:
-        return None
+        return jsonify({'error': 'monitor_data.json not found'}), 404
 
 
-def write_knobs(data):
-    """Write data to the knobs.json file."""
-    with open(knobs_path, 'w') as file:
-        json.dump(data, file, indent=2)
-
-
-class MonitorAPI(MethodView):
-    def get(self):
-        try:
-            file_path = "./monitor_data.json"
-            with open(file_path, "r") as json_file:
-                data = json.load(json_file)
-            return jsonify(data)
-        except FileNotFoundError:
-            return jsonify({'error': 'monitor_data.json not found'}), 404
-
-
-app.add_url_rule('/monitor', view_func=MonitorAPI.as_view('monitor'))
 
 
 @app.route('/execute', methods=['PUT'])
 def execute_adaptation():
-    data = get_execute()
+    data = getexecute()
     return jsonify(data)
 
-@app.route('/adaptationoptions', method=[GET])
-def adapatationoptions():
-    data = getAdaptationOptions()
-    return jsonify(data)
-
-class MonitorSchemaAPI(MethodView):
-    def get(self):
+@app.route('/monitor_schema', methods=['PUT'])
+def get():
         schema = {
             'vehicle_count': 'number',
             'avg_trip_duration': 'number',
@@ -60,11 +38,8 @@ class MonitorSchemaAPI(MethodView):
         return jsonify(schema)
 
 
-app.add_url_rule('/monitor_schema', view_func=MonitorSchemaAPI.as_view('monitor_schema'))
-
-
-class AdaptationOptionsSchemaAPI(MethodView):
-    def get(self):
+@app.route('/adaptation_options_schema', methods=['PUT'])
+def get():
         schema = {
             'type': 'object',
             'properties': {
@@ -110,8 +85,6 @@ class AdaptationOptionsSchemaAPI(MethodView):
         }
         return jsonify(schema)
 
-
-app.add_url_rule('/adaptation_options_schema', view_func=AdaptationOptionsSchemaAPI.as_view('adaptation_options_schema'))
 
 
 if __name__ == '__main__':
