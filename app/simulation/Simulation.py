@@ -135,7 +135,7 @@ class Simulation(object):
                     CarRegistry.totalCarCounter) + " # avgTripDuration: " + str(
                     CarRegistry.totalTripAverage) + "(" + str(
                     CarRegistry.totalTrips) + ")" + " # avgTripOverhead: " + str(
-                    CarRegistry.totalTripOverheadAverage))
+                    CarRegistry.totalTripOverheadAverage) + "get the " + "")
                 
                 # Write monitoring data to json file 
                 file_path = "app/HTTPServer/monitor_data.json"
@@ -146,7 +146,8 @@ class Simulation(object):
                         'carIndexCounter': CarRegistry.carIndexCounter,
                         'totalTrips': CarRegistry.totalTrips,
                         'totalTripAverage': CarRegistry.totalTripAverage,
-                        'totalTripOverheadAverage': CarRegistry.totalTripOverheadAverage
+                        'totalTripOverheadAverage': CarRegistry.totalTripOverheadAverage ,
+                        'edgeIDs' : traci.edge.getIDList()
                     }
                 with open(file_path, 'w') as json_file:
                     json.dump(data, json_file)

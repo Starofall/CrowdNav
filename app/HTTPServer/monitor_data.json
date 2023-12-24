@@ -3,5 +3,6 @@
     "carIndexCounter": 1,
     "totalTrips": 1,
     "totalTripAverage": 4,
-    "totalTripOverheadAverage": 44
+    "totalTripOverheadAverage": 44,
+    "edgeIDs": ["edgeID1"]
 }

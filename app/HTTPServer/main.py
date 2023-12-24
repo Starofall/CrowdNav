@@ -50,7 +50,8 @@ class MonitorSchemaAPI(MethodView):
             'vehicle_count': 'number',
             'avg_trip_duration': 'number',
             'total_trips': 'number',
-            'avg_trip_overhead': 'number'
+            'avg_trip_overhead': 'number',
+            'edgeIDs': 'list'
         }
         return jsonify(schema)
 
