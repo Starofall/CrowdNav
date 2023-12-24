@@ -1,7 +1,7 @@
 from flask import Flask, jsonify
 from flask.views import MethodView
 import json
-from endpoints import get_monitor , getAdaptationOptions , getexecute
+from endpoints import getAdaptationOptions 
 
 app = Flask(__name__)
 
