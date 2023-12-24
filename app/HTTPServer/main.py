@@ -1,7 +1,7 @@
 from flask import Flask, jsonify
 from flask.views import MethodView
 import json
-from endpoints import get_monitor
+from endpoints import get_monitor , getAdaptationOptions , getexecute
 
 app = Flask(__name__)
 
@@ -43,6 +43,10 @@ def execute_adaptation():
     data = get_execute()
     return jsonify(data)
 
+@app.route('/adaptationoptions', method=[GET])
+def adapatationoptions():
+    data = getAdaptationOptions()
+    return jsonify(data)
 
 class MonitorSchemaAPI(MethodView):
     def get(self):
