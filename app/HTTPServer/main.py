@@ -27,7 +27,7 @@ def write_knobs(data):
 class MonitorAPI(MethodView):
     def get(self):
         try:
-            file_path = "./monitor_data.json"
+            file_path = "app/HTTPServer/monitor_data.json"
             with open(file_path, "r") as json_file:
                 data = json.load(json_file)
             return jsonify(data)

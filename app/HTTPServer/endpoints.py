@@ -18,7 +18,7 @@ def get_monitor():
   
 
 # Construct the path to the knobs.json file, assuming it's two directories back
-json_file_path = '../../knobs.json'
+json_file_path = './knobs.json'
 
 # Open the JSON file in read mode ('r')
 with open(json_file_path, 'r') as json_file:

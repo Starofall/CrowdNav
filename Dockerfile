@@ -1,6 +1,6 @@
 FROM starofall/crowdnav
 
-COPY . .
+ADD ./ /app/
 
 # WORKDIR /app
 
