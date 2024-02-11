@@ -1,0 +1,14 @@
+{
+    "step":1,
+    "EdgeID": 2,
+    "EdgeDensity":{
+        "edge1": 10,
+        "edge2": 8,
+        "edge3": 15
+    },
+    "totalCarCounter":2,
+    "carIndexCounter": 1,
+    "totalTrips": 1,
+    "totalTripAverage": 4,
+    "totalTripOverheadAverage": 44
+}

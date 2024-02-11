@@ -1,0 +1,11 @@
+version: '3'
+services:
+  app:
+    image: crowdnav:latest  #Image name change it accordingly
+    depends_on:
+      - Upisas
+      - kafka
+  Upisas:
+    image: upisasstudents:latest #Image name 
+  kafka:
+    image: spotify/kafka:latest #image name

@@ -11,7 +11,7 @@ from app.entitiy.CarRegistry import CarRegistry
 from app.logging import info
 from app.routing.CustomRouter import CustomRouter
 from app.streaming import RTXConnector
-import time
+import time , random
 
 # get the current system time
 from app.routing.RoutingEdge import RoutingEdge
@@ -25,6 +25,8 @@ class Simulation(object):
     # the current tick of the simulation
     tick = 0
 
+    edge_density = {}
+    
     # last tick time
     lastTick = current_milli_time()
 
@@ -32,7 +34,7 @@ class Simulation(object):
     def applyFileConfig(cls):
         """ reads configs from a json and applies it at realtime to the simulation """
         try:
-            config = json.load(open('./knobs.json'))
+            config = json.load(open('../../knobs.json'))
             CustomRouter.explorationPercentage = config['explorationPercentage']
             CustomRouter.averageEdgeDurationFactor = config['averageEdgeDurationFactor']
             CustomRouter.maxSpeedAndLengthFactor = config['maxSpeedAndLengthFactor']
@@ -41,7 +43,7 @@ class Simulation(object):
             CustomRouter.reRouteEveryTicks = config['reRouteEveryTicks']
         except:
             pass
-
+    
     @classmethod
     def start(cls):
         """ start the simulation """
@@ -50,7 +52,18 @@ class Simulation(object):
         cls.applyFileConfig()
         CarRegistry.applyCarCounter()
         cls.loop()
-
+        
+    
+    ##Find's the density on the first 30 Edges{For Demonstartion Purpose, you can delete the }
+    @classmethod
+    def monitor_edge_density(cls):
+        """ Monitor and update the density of vehicles on specific edges """
+        cls.edge_density.clear()  # Clear the existing data
+        edge_ids = traci.edge.getIDList()[:30]  # Get the first 30 edge IDs
+        for edge_id in edge_ids:
+           density = traci.edge.getLastStepVehicleNumber(edge_id)
+           cls.edge_density[edge_id] = density
+            
     @classmethod
     # @profile
     def loop(cls):
@@ -69,7 +82,7 @@ class Simulation(object):
             msg = dict()
             msg["duration"] = duration
             RTXForword.publish(msg, Config.kafkaTopicPerformance)
-
+            
             # Check for removed cars and re-add them into the system
             for removedCarId in traci.simulation.getSubscriptionResults()[122]:
                 CarRegistry.findById(removedCarId).setArrived(cls.tick)
@@ -81,6 +94,9 @@ class Simulation(object):
             msg = dict()
             msg["duration"] = current_milli_time() - timeBeforeCarProcess
             RTXForword.publish(msg, Config.kafkaTopicRouting)
+    
+             # Monitor vehicle density for each edge
+            cls.monitor_edge_density()
 
             # if we enable this we get debug information in the sumo-gui using global traveltime
             # should not be used for normal running, just for debugging
@@ -127,15 +143,35 @@ class Simulation(object):
                         if "edge_average_influence" in newConf:
                             RoutingEdge.edgeAverageInfluence = newConf["edge_average_influence"]
                             print("setting edgeAverageInfluence: " + str(newConf["edge_average_influence"]))
+                            
 
             # print status update if we are not running in parallel mode
             if (cls.tick % 100) == 0 and Config.parallelMode is False:
                 print(str(Config.processID) + " -> Step:" + str(cls.tick) + " # Driving cars: " + str(
-                    traci.vehicle.getIDCount()) + "/" + str(
+                    traci.vehicle.getIDCount()) + "EdgeID" + str(random.choice(traci.edge.getIDList()[:30]))+ 
+                    "EdgeDensity" + str(cls.monitor_edge_density()) +"/" + str(
                     CarRegistry.totalCarCounter) + " # avgTripDuration: " + str(
                     CarRegistry.totalTripAverage) + "(" + str(
                     CarRegistry.totalTrips) + ")" + " # avgTripOverhead: " + str(
                     CarRegistry.totalTripOverheadAverage))
+            
+                        
+                # Write monitoring data to json file 
+                file_path = "app/HTTPServer/monitor_data.json"
+                data =  {
+                        'step': str(Config.processID),
+                        'currentCars': traci.vehicle.getIDCount(),
+                        'EdgeID': random.choice(traci.edge.getIDList()[:30]),
+                        'EdgeDensity': cls.monitor_edge_density(),
+                        'totalCarCounter': CarRegistry.totalCarCounter,
+                        'carIndexCounter': CarRegistry.carIndexCounter,
+                        'totalTrips': CarRegistry.totalTrips,
+                        'totalTripAverage': CarRegistry.totalTripAverage,
+                        'totalTripOverheadAverage': CarRegistry.totalTripOverheadAverage
+                    }
+                with open(file_path, 'w') as json_file:
+                    json.dump(data, json_file)
+
 
                 # @depricated -> will be removed
                 # # if we are in paralllel mode we end the simulation after 10000 ticks with a result output
