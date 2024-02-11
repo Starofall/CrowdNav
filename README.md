@@ -36,3 +36,21 @@ A first guide on how to use (i.e. adapt, measure, optimize) CrowdNav with the [R
 ### Notes
 
 * To let the system stabalize, no message is sent to kafka or CSV in the first 1000 ticks .
+
+## How to run Crowdnav HTTP server locally
+1. Clone repository 
+```
+git clone https://github.com/karola65/foas_crowd_nav.git
+```
+2. Install Docker 
+3. To build the docker image
+* Run 
+```
+docker build -t crowdnav-4 .
+``` 
+4. To start the container
+* Run
+```
+docker run -p 3000:3000 crowdnav-4
+```
+5. Now you can access the endpoints at http://localhost:3000
